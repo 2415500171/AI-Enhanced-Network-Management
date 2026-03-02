@@ -1,4 +1,4 @@
-AI-Enhanced Network Management for Big Data 🌐🤖
+AI-Enhanced Network Management for Big Data Environment ::
 📌 Project Overview
 Traditional network management systems are buckling under the weight of the "Big Data" era. This project implements an AI-driven framework designed to automate network optimization, detect security anomalies in real-time, and provide predictive analytics to prevent congestion before it happens.
 
