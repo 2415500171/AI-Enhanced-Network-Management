@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Network Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h1>AI-Enhanced Network Management</h1>
+
+    <div class="stats">
+        <div class="card">
+            <h2>Total Records</h2>
+            <p>{{ total }}</p>
+        </div>
+        <div class="card alert">
+            <h2>Anomalies</h2>
+            <p>{{ anomalies }}</p>
+        </div>
+    </div>
+
+    <h3>Live Network Snapshot</h3>
+    <div class="table-box">
+        {{ table|safe }}
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,31 @@
+body {
+    background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.container {
+    padding: 30px;
+}
+
+.stats {
+    display: flex;
+    gap: 20px;
+}
+
+.card {
+    background: rgba(255,255,255,0.1);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.alert {
+    border: 2px solid red;
+}
+
+.table-box {
+    background: white;
+    color: black;
+    padding: 15px;
+    border-radius: 10px;
+}
