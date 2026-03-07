@@ -12,7 +12,73 @@
     <div class="stats">
         <div class="card">
             <h2>Total Records</h2>
-            <p>{{ total }}</p>
+            <<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Network Management Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    <h1>AI-Enhanced Network Management System</h1>
+
+    <!-- STAT CARDS -->
+    <div class="stats">
+        <div class="card">
+            <h2>Total Events</h2><p>{{ total }}</p>
+        </div>
+        <div class="card red">
+            <h2>Intrusions Detected</h2><p>{{ attacks }}</p>
+        </div>
+        <div class="card orange">
+            <h2>Congestion Events</h2><p>{{ congestions }}</p>
+        </div>
+        <div class="card green">
+            <h2>Normal Events</h2><p>{{ normal }}</p>
+        </div>
+    </div>
+
+    <!-- PREDICTIVE ANALYTICS -->
+    <div class="prediction-box">
+        <h2>Predictive Analytics</h2>
+        <p>Current Traffic: <strong>{{ current_traffic }} Mbps</strong></p>
+        <p>Current Latency: <strong>{{ current_latency }} ms</strong></p>
+        <p>Predicted Next Latency: <strong>{{ predicted_latency }} ms</strong></p>
+    </div>
+
+    <!-- AUTOMATED ACTION BOX -->
+    <div class="action-box {{ action.color }}">
+        <h2>Network Status: {{ action.status }}</h2>
+        <p>{{ action.action }}</p>
+    </div>
+
+    <!-- LIVE SIMULATION BUTTON -->
+    <button onclick="fetchLive()">Simulate Live Network Reading</button>
+    <div id="live-result"></div>
+
+    <!-- DATA TABLE -->
+    <h3>Recent Network Readings (last 20)</h3>
+    <div class="table-box">{{ table|safe }}</div>
+</div>
+
+<script>
+function fetchLive() {
+    fetch('/api/live')
+        .then(r => r.json())
+        .then(d => {
+            document.getElementById('live-result').innerHTML = `
+                <div class="action-box ${d.alert_color}">
+                    <b>Live Reading</b> — Traffic: ${d.data.traffic_mbps} Mbps |
+                    Latency: ${d.data.latency_ms} ms |
+                    Intrusion: ${d.ids_flag ? 'YES ⚠️' : 'No ✅'}<br>
+                    Status: <b>${d.network_state}</b><br>
+                    Action: ${d.action}
+                </div>`;
+        });
+}
+</script>
+</body>
+</html>p>{{ total }}</p>
         </div>
         <div class="card alert">
             <h2>Anomalies</h2>
