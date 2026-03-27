@@ -1,4 +1,6 @@
 flask
+flask-login
+Werkzeug
 pandas
 numpy
 scikit-learn

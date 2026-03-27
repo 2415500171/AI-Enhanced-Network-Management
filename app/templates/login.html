@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AI Network Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="bg-shape bg-shape-one"></div>
+    <div class="bg-shape bg-shape-two"></div>
+
+    <main class="auth-page">
+        <section class="auth-card">
+            <p class="eyebrow">Secure Access</p>
+            <h1>Dashboard Login</h1>
+            <p class="subtitle">Sign in to view network analytics and live system status.</p>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash-error">{{ messages[0] }}</div>
+                {% endif %}
+            {% endwith %}
+
+            <form method="post" class="auth-form">
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" placeholder="Enter username" required>
+
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" placeholder="Enter password" required>
+
+                <button type="submit" class="live-btn">Sign In</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

@@ -16,8 +16,12 @@
                 <p class="eyebrow">Operations Center</p>
                 <h1>AI-Enhanced Network Management</h1>
                 <p class="subtitle">Real-time visibility, predictive signals, and immediate action guidance for critical network events.</p>
+                <p class="session-info">Signed in as {{ current_user.username }}</p>
             </div>
-            <button class="live-btn" onclick="fetchLive()">Simulate Live Reading</button>
+            <div class="hero-actions">
+                <button class="live-btn" onclick="fetchLive()">Simulate Live Reading</button>
+                <a class="logout-btn" href="{{ url_for('logout') }}">Log Out</a>
+            </div>
         </header>
 
         <section class="stats-grid" aria-label="Network summary metrics">

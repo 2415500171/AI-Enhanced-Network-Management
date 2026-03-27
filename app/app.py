@@ -1,9 +1,11 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, redirect, url_for, request, flash
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import pandas as pd
 import numpy as np
 import joblib
 from sklearn.preprocessing import StandardScaler
 import sys, os
+from werkzeug.security import generate_password_hash, check_password_hash
 
 # Always resolve paths relative to the project root (one level up from app/)
 BASE_DIR    = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -15,6 +17,37 @@ sys.path.insert(0, SCRIPTS_DIR)
 from action_engine import get_action
 
 app = Flask(__name__)
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "change-this-secret-key")
+
+login_manager = LoginManager()
+login_manager.login_view = "login"
+login_manager.login_message = "Please log in to access the dashboard."
+login_manager.init_app(app)
+
+
+class User(UserMixin):
+    def __init__(self, user_id, username):
+        self.id = user_id
+        self.username = username
+
+
+DEFAULT_USERNAME = os.getenv("APP_USERNAME", "admin")
+DEFAULT_PASSWORD_HASH = generate_password_hash(os.getenv("APP_PASSWORD", "admin123"))
+USERS = {
+    DEFAULT_USERNAME: {
+        "id": "1",
+        "username": DEFAULT_USERNAME,
+        "password_hash": DEFAULT_PASSWORD_HASH,
+    }
+}
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    for user_data in USERS.values():
+        if user_data["id"] == user_id:
+            return User(user_data["id"], user_data["username"])
+    return None
 
 # Load all models once at startup
 ids_model      = joblib.load(os.path.join(MODELS_DIR, "ids_model.pkl"))
@@ -26,6 +59,41 @@ df             = pd.read_csv(os.path.join(DATA_DIR, "network_data.csv"))
 FEATURES = ["traffic_mbps", "latency_ms", "packet_loss", "bandwidth_util"]
 
 @app.route("/")
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for("dashboard"))
+    return redirect(url_for("login"))
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("dashboard"))
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+        user_data = USERS.get(username)
+
+        if user_data and check_password_hash(user_data["password_hash"], password):
+            login_user(User(user_data["id"], user_data["username"]))
+            next_page = request.args.get("next")
+            return redirect(next_page or url_for("dashboard"))
+
+        flash("Invalid username or password.")
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+
+
+@app.route("/dashboard")
+@login_required
 def dashboard():
     X = df[FEATURES]
 
@@ -67,6 +135,7 @@ def dashboard():
     )
 
 @app.route("/api/live")
+@login_required
 def live_data():
     """API endpoint: simulates a new live reading & runs all 3 models on it"""
     new_row = {

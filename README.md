@@ -44,10 +44,13 @@ action_engine.py
             |
             v
 app.py  (Flask Dashboard at http://127.0.0.1:5000)
+    → /login page with Flask-Login session authentication
+    → /logout to terminate active session
+    → /dashboard protected route for authenticated users
     → Summary cards: Total Events, Intrusions, Congestions, Normal
     → Predictive Analytics box: current + predicted next latency
     → Action box: live network status + automated action taken
-    → /api/live endpoint: simulates a real-time reading through all 3 models
+    → /api/live endpoint (protected): simulates a real-time reading through all 3 models
     → Data table: last 20 records with AI flags
 ```
 
@@ -74,6 +77,7 @@ app.py  (Flask Dashboard at http://127.0.0.1:5000)
 | Model Persistence | joblib        | Saves/loads trained models as .pkl files                     |
 | Web Framework     | Flask         | Dashboard server + REST API                                  |
 | Frontend          | HTML + CSS    | Dashboard UI                                                 |
+| Authentication    | Flask-Login   | Session-based login protection for dashboard + API           |
 
 ---
 
@@ -106,6 +110,19 @@ python app/app.py
 # Open http://127.0.0.1:5000
 ```
 
+### Default Login Credentials
+
+- Username: `admin`
+- Password: `admin123`
+
+Set environment variables to override defaults before running:
+
+```bash
+set APP_USERNAME=your_user
+set APP_PASSWORD=your_password
+set FLASK_SECRET_KEY=your_random_secret
+```
+
 All scripts use absolute paths derived from `__file__` — they work regardless of which directory you run them from.
 
 ---
@@ -117,7 +134,8 @@ AI-Enhanced-Network-Management/
 ├── app/
 │   ├── app.py                  # Flask app — loads models, serves dashboard + API
 │   ├── templates/
-│   │   └── dashboard.html      # Dashboard UI
+│   │   ├── dashboard.html      # Dashboard UI (protected)
+│   │   └── login.html          # Authentication UI
 │   └── static/
 │       └── style.css           # Styles
 ├── scripts/
