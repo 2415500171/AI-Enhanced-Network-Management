@@ -1,0 +1,6 @@
+{% macro flow_feature_item(title, description, modifier='') -%}
+<article class="flow-feature-item {{ modifier }}">
+    <h3 class="flow-feature-title">{{ title }}</h3>
+    <p class="flow-feature-copy">{{ description }}</p>
+</article>
+{%- endmacro %}

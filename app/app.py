@@ -49,6 +49,16 @@ def load_user(user_id):
             return User(user_data["id"], user_data["username"])
     return None
 
+
+def get_next_user_id():
+    max_id = 0
+    for user_data in USERS.values():
+        try:
+            max_id = max(max_id, int(user_data["id"]))
+        except (ValueError, KeyError, TypeError):
+            continue
+    return str(max_id + 1)
+
 # Load all models once at startup
 ids_model      = joblib.load(os.path.join(MODELS_DIR, "ids_model.pkl"))
 opt_model      = joblib.load(os.path.join(MODELS_DIR, "traffic_optimizer.pkl"))
@@ -60,9 +70,7 @@ FEATURES = ["traffic_mbps", "latency_ms", "packet_loss", "bandwidth_util"]
 
 @app.route("/")
 def index():
-    if current_user.is_authenticated:
-        return redirect(url_for("dashboard"))
-    return redirect(url_for("login"))
+    return render_template("index.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -80,16 +88,55 @@ def login():
             next_page = request.args.get("next")
             return redirect(next_page or url_for("dashboard"))
 
-        flash("Invalid username or password.")
+        flash("Invalid username or password.", "error")
 
     return render_template("login.html")
+
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for("dashboard"))
+
+    if request.method == "POST":
+        username = request.form.get("username", "").strip()
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+
+        if not username or not password:
+            flash("Username and password are required.", "error")
+            return render_template("signup.html")
+
+        if username in USERS:
+            flash("This username already exists. Try another one.", "error")
+            return render_template("signup.html")
+
+        if len(password) < 6:
+            flash("Password must be at least 6 characters long.", "error")
+            return render_template("signup.html")
+
+        if password != confirm_password:
+            flash("Passwords do not match.", "error")
+            return render_template("signup.html")
+
+        USERS[username] = {
+            "id": get_next_user_id(),
+            "username": username,
+            "password_hash": generate_password_hash(password),
+        }
+
+        login_user(User(USERS[username]["id"], USERS[username]["username"]))
+        flash("Account created successfully.", "success")
+        return redirect(url_for("dashboard"))
+
+    return render_template("signup.html")
 
 
 @app.route("/logout")
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("login"))
+    return redirect(url_for("index"))
 
 
 @app.route("/dashboard")
