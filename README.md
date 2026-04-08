@@ -66,6 +66,8 @@ It addresses three core problems:
 ## Run Instructions
 
 ```bash
+python -m venv .venv
+.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python scripts/data_generator.py
 python scripts/train_model.py
@@ -73,6 +75,27 @@ python app/app.py
 ```
 
 Open `http://127.0.0.1:5000`.
+
+## Git and GitHub Setup (Recommended)
+
+Keep one remote as your source of truth for pulls and one for optional backup/fork pushes.
+
+```bash
+git branch --set-upstream-to=origin/main main
+git fetch --all --prune
+git status -sb
+```
+
+If you only want a single remote workflow, remove the extra remote:
+
+```bash
+git remote remove myfork
+```
+
+## Notes
+
+- `.venv` is ignored by Git via `.gitignore`.
+- Model artifacts (`models/*.pkl`) are ignored to avoid committing generated binaries.
 
 ## Default Credentials
 
