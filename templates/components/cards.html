@@ -1,0 +1,13 @@
+{# Reusable card partial — use with {% include "components/cards.html" with ... %} #}
+{% if icon %}
+<article class="highlight-card">
+    <div class="icon-badge">{{ icon }}</div>
+    <h3>{{ title }}</h3>
+    <p>{{ text }}</p>
+</article>
+{% else %}
+<article class="feature-card">
+    <h3>{{ title }}</h3>
+    <p>{{ text }}</p>
+</article>
+{% endif %}
