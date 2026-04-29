@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | AI Enhanced Network Management</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="bg-shape bg-shape-one"></div>
+    <div class="bg-shape bg-shape-two"></div>
+
+    <main class="auth-page">
+        <section class="auth-card">
+            <a href="{% url 'core:index' %}" class="back-link">Back to Home</a>
+            <p class="eyebrow">Secure Access</p>
+            <h1>Dashboard Login</h1>
+            <p class="subtitle">Sign in to view network analytics and live system status.</p>
+
+            {% if form.errors %}
+                <div class="flash-error">Invalid username or password.</div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-{{ message.tags|default:'info' }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" class="auth-form">
+                    {% csrf_token %}
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" placeholder="Enter username" required>
+
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password" placeholder="Enter password" required>
+
+                <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+            </form>
+
+            <p class="auth-switch">New here? <a href="{% url 'users:signup' %}">Create an account</a></p>
+        </section>
+    </main>
+</body>
+</html>

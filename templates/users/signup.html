@@ -1,0 +1,51 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | NetMan AI</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="bg-shape bg-shape-one"></div>
+    <div class="bg-shape bg-shape-two"></div>
+
+    <main class="auth-page">
+        <section class="auth-card">
+            <a href="{% url 'core:index' %}" class="back-link">Back to Home</a>
+            <p class="eyebrow">Create Account</p>
+            <h1>Start with NetMan AI</h1>
+            <p class="subtitle">Create your credentials to access the secure analytics dashboard.</p>
+
+            {% if form.errors %}
+                <div class="flash-error">Please correct the highlighted signup fields.</div>
+            {% endif %}
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="flash-{{ message.tags|default:'info' }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                <label for="username">Username</label>
+                <input id="username" name="username" type="text" placeholder="Choose username" required>
+
+                <label for="password1">Password</label>
+                <input id="password1" name="password1" type="password" placeholder="At least 8 characters" required>
+
+                <label for="password2">Confirm Password</label>
+                <input id="password2" name="password2" type="password" placeholder="Re-enter password" required>
+
+                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+            </form>
+
+            <p class="auth-switch">Already have an account? <a href="{% url 'users:login' %}">Log in</a></p>
+        </section>
+    </main>
+</body>
+</html>
