@@ -98,9 +98,14 @@ Once the server is running, open your web browser and navigate to `http://127.0.
 ## 🧠 Machine Learning Models
 
 The `ml_engine` relies on pre-trained models stored in the `artifacts/models` directory:
-- **`ids_model.pkl`**: Classifies network traffic to detect intrusions.
-- **`traffic_optimizer.pkl`**: Determines current network state (Normal vs. Congested).
-- **`predictor.pkl`**: Predicts numerical network latency.
+- **`ids_model.pkl`**: Random Forest classifier to detect network intrusions.
+- **`traffic_optimizer.pkl`**: Class-balanced Random Forest to determine network state (Normal, Congested, Under Attack).
+- **`predictor.pkl`**: Gradient Boosting Regressor predicting upcoming network latency using a sliding time-window.
 - **`scaler.pkl`**: Normalizes real-time data inputs for accurate model predictions.
 
-*(Note: If you plan to retrain the models, you will need to overwrite these `.pkl` files with your updated versions).*
+### Retraining the Models
+If you want to train the models on new data, a reproducible pipeline is provided. Ensure you have your data in `data/network_data.csv`, then run:
+```bash
+python ml_engine/train_models.py
+```
+This will automatically preprocess the data, handle class imbalances, retrain all three models using best practices, and overwrite the `.pkl` files.
