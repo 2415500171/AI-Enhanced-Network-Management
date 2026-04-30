@@ -11,5 +11,8 @@ python manage.py collectstatic --no-input
 echo "Running database migrations..."
 python manage.py migrate
 
-# Create a superuser if desired (optional)
-# python manage.py createsuperuser --noinput || true
+# Create a superuser automatically using environment variables
+# You must set DJANGO_SUPERUSER_USERNAME, DJANGO_SUPERUSER_EMAIL, and DJANGO_SUPERUSER_PASSWORD in Render
+if [ "$DJANGO_SUPERUSER_USERNAME" ]; then
+  python manage.py createsuperuser --noinput || true
+fi
